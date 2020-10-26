@@ -22,11 +22,11 @@ import java.util.List;
 
 import android.widget.TabHost;
 import android.app.TabActivity;
+import android.widget.AdapterView;
 
 public class MainActivity extends TabActivity {
     List<Restaurant> restaurantList = new ArrayList<Restaurant>();
     RestaurantAdapter adapter = null;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +37,8 @@ public class MainActivity extends TabActivity {
         save.setOnClickListener(onSave);
 
         ListView list = (ListView) findViewById(R.id.restaurants);
+
+        list.setOnItemClickListener(onListClick);
 
         adapter = new RestaurantAdapter();
         list.setAdapter(adapter);
@@ -121,5 +123,31 @@ public class MainActivity extends TabActivity {
             return row;
         }
     }
+
+    private AdapterView.OnItemClickListener onListClick = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Restaurant r = restaurantList.get(position);
+            EditText name;
+            EditText address;
+            RadioGroup types;
+
+            name = (EditText)findViewById(R.id.name);
+            address = (EditText)findViewById(R.id.addr);
+            types = (RadioGroup)findViewById(R.id.types);
+
+
+            name.setText(r.getName());
+            address.setText(r.getAddress());
+            if (r.getType().equals("Sit down"))
+                types.check(R.id.sit_down);
+            else if (r.getType().equals("Take out"))
+                types.check(R.id.take_out);
+            else
+                types.check(R.id.delivery);
+
+            getTabHost().setCurrentTab(1);
+        }
+    };
 }
 
