@@ -1,23 +1,29 @@
 package com.example.projectlunchlist;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Adapter;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
-    private List<Restaurant> restaurantList = new ArrayList<Restaurant>();
-    private ArrayAdapter<Restaurant> adapter = null;
+public class MainActivity extends Activity {
+    List<Restaurant> restaurantList = new ArrayList<Restaurant>();
+    RestaurantAdapter adapter = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
         ListView list = (ListView) findViewById(R.id.restaurants);
 
-        adapter = new ArrayAdapter<Restaurant>(this, android.R.layout.simple_list_item_1, restaurantList);
+        adapter = new RestaurantAdapter();
         list.setAdapter(adapter);
     }
 
@@ -65,4 +71,39 @@ public class MainActivity extends AppCompatActivity {
 
     };
 
+    class RestaurantAdapter extends ArrayAdapter<Restaurant>
+    {
+        public RestaurantAdapter(Context context, int textViewResourceId) {
+            super(context, textViewResourceId);
+        }
+
+        public RestaurantAdapter()
+        {
+            super(MainActivity.this, android.R.layout.simple_list_item_1, restaurantList);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View row = convertView;
+            if (row == null){
+                LayoutInflater inflater = getLayoutInflater();
+                row = inflater.inflate(R.layout.row, null);
+            }
+            Restaurant r = restaurantList.get(position);
+
+            ((TextView) row.findViewById(R.id.title)).setText(r.getName());
+            ((TextView) row.findViewById(R.id.address)).setText(r.getAddress());
+            ImageView icon = (ImageView) row.findViewById(R.id.icon);
+
+            String type = r.getType();
+            if(type.equals("Take out"))
+                icon.setImageResource(R.drawable.type_t);
+            else if (type.equals("Sit down"))
+                icon.setImageResource(R.drawable.type_s);
+            else
+                icon.setImageResource(R.drawable.type_d);
+            return row;
+        }
+    }
 }
+

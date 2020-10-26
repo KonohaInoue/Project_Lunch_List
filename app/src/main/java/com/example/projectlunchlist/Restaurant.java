@@ -1,5 +1,10 @@
 package com.example.projectlunchlist;
 
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
 public class Restaurant {
     private String name="";
     private String address="";
