@@ -20,7 +20,10 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends Activity {
+import android.widget.TabHost;
+import android.app.TabActivity;
+
+public class MainActivity extends TabActivity {
     List<Restaurant> restaurantList = new ArrayList<Restaurant>();
     RestaurantAdapter adapter = null;
 
@@ -37,6 +40,19 @@ public class MainActivity extends Activity {
 
         adapter = new RestaurantAdapter();
         list.setAdapter(adapter);
+
+        TabHost.TabSpec spec = getTabHost().newTabSpec("tag1");
+        spec.setContent(R.id.restaurants);
+        spec.setIndicator("List",getResources().getDrawable(R.drawable.list));
+        getTabHost().addTab(spec);
+
+        spec = getTabHost().newTabSpec("tag2");
+        spec.setContent(R.id.details);
+        spec.setIndicator("Details",
+                getResources().getDrawable(R.drawable.restaurant));
+        getTabHost().addTab(spec);
+
+        getTabHost().setCurrentTab(0);
     }
 
     private View.OnClickListener onSave = new View.OnClickListener() {
@@ -49,7 +65,7 @@ public class MainActivity extends Activity {
             r.setName(name.getText().toString());
             r.setAddress(address.getText().toString());
 
-            RadioGroup type = (RadioGroup)findViewById(R.id.type);
+            RadioGroup type = (RadioGroup)findViewById(R.id.types);
             switch (type.getCheckedRadioButtonId())
             {
                 case R.id.take_out:
